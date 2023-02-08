@@ -45,7 +45,7 @@ def parse_search(searched_for: str, json: Dict[str, Any]) -> SearchResult:
         gifs=[
             GIF(
                 id=gif['id'],
-                create_date=datetime.utcfromtimestamp(gif['createDate']),
+                create_date="",
                 has_audio=gif['hasAudio'],
                 width=gif['width'],
                 height=gif['height'],
@@ -74,8 +74,8 @@ def parse_search(searched_for: str, json: Dict[str, Any]) -> SearchResult:
                 # I only had this occurrence once where redgifs did not
                 # send the response properly and messed up the entire JSON
                 # response, this is why I have used dict.get() here.
-                creation_time=datetime.utcfromtimestamp(user.get('creationtime'))
-                if user.get('creationtime') is not None else None,
+                creation_time="",
+                # if user.get('creationtime') is not None else None,
                 description=user.get('description'),
                 followers=user.get('followers'),
                 following=user.get('following'),
@@ -114,7 +114,7 @@ def parse_search_image(searched_for: str, json: Dict[str, Any]) -> SearchResult:
         images=[
             Image(
                 id=gif['id'],
-                create_date=datetime.utcfromtimestamp(gif['createDate']),
+                create_date="",
                 width=gif['width'],
                 height=gif['height'],
                 likes=gif['likes'],
@@ -138,8 +138,8 @@ def parse_search_image(searched_for: str, json: Dict[str, Any]) -> SearchResult:
         ],
         users=[
             User(
-                creation_time=datetime.utcfromtimestamp(user.get('creationtime'))
-                if user.get('creationtime') is not None else None,
+                creation_time="",
+                # if user.get('creationtime') is not None else None,
                 description=user.get('description'),
                 followers=user.get('followers'),
                 following=user.get('following'),
@@ -170,7 +170,7 @@ def parse_creators(json: Dict[str, Any]) -> CreatorsResult:
     return CreatorsResult(
         items=[
             User(
-                creation_time=datetime.utcfromtimestamp(user['creationtime']),
+                creation_time="",
                 description=user['description'],
                 followers=user['followers'],
                 following=user['following'],
@@ -202,7 +202,7 @@ def parse_creator(json: Dict[str, Any]) -> CreatorResult:
     user = json['users'][0]
     return CreatorResult(
         creator=User(
-            creation_time=datetime.utcfromtimestamp(user['creationtime']),
+            creation_time="",
             description=user['description'],
             followers=user['followers'],
             following=user['following'],
