@@ -66,8 +66,8 @@ class API:
     ) -> None:
         self.http: HTTP = HTTP(session, proxy=proxy, proxy_auth=proxy_auth)
 
-    def login(self, username: Optional[str] = None, password: Optional[str] = None) -> bool:
-        return self.http.login(username, password)
+    def login(self, ip_address: str, user_agent: str, username: Optional[str] = None, password: Optional[str] = None) -> bool:
+        return self.http.login(ip_address, user_agent, username, password)
 
     def get_tags(self) -> List[Dict[str, Union[str, int]]]:
         """Get all available RedGifs Tags.
@@ -197,6 +197,14 @@ class API:
         return parse_search(st, resp)
 
     search_gif = search
+
+    def gifs_info(
+            self,
+            gifIds: Union[str, str],
+        ) -> SearchResult:
+        resp = self.http.gifs_info(gifIds)
+        print(resp)
+
 
     def search_creators(
         self,

@@ -31,6 +31,7 @@ import sys
 import logging
 from urllib.parse import quote
 from typing import Any, ClassVar, Dict, List, NamedTuple, Optional, Union
+import socket
 
 import requests
 import aiohttp
@@ -83,6 +84,9 @@ class HTTP:
         self.proxy: Optional[yarl.URL] = yarl.URL(proxy) if proxy else None
         self.proxy_auth: Optional[ProxyAuth] = proxy_auth
 
+        self.ip_address = None
+        self.user_agent = None
+
         # Set proxy
         if self.proxy:
             self._proxy = {self.proxy.scheme: str(self.proxy)}
@@ -114,13 +118,14 @@ class HTTP:
         self.__session.close()
 
     # TODO: Implement OAuth login support
-    def login(self, username: Optional[str] = None, password: Optional[str] = None) -> bool:
-        if (username and password) is None:
-            temp_token = self.get_temp_token()['token']
-            self.headers['authorization'] = f'Bearer {temp_token}'
-            return True
-        else:
-            raise NotImplementedError
+    def login(self, ip_address: str, user_agent: str, username: Optional[str] = None, password: Optional[str] = None) -> bool:
+        temp_token = self.get_temp_token()['token']
+        self.headers['authorization'] = f'Bearer {temp_token}'
+        self.ip_address = ip_address
+        self.user_agent = user_agent
+        # self.headers['ip-address'] = ip_address
+        # self.headers['User-Agent'] = user_agent
+        return True
 
     def get_temp_token(self):
         return self.request(Route('GET', '/v2/auth/temporary'))
@@ -138,6 +143,14 @@ class HTTP:
             'GET', '/v2/gifs/search?search_text={search_text}&order={order}&count={count}&page={page}',
             search_text=search_text, order=order.value, count=count, page=page
         )
+        return self.request(r, **params)
+    
+    def gifs_info(self, gifIds: Union[str, str], **params: Any):
+        r = Route(
+            'GET', '/v2/gifs?ids={gifIds}?user-addr={ip_address}&user-agent={user_agent}',
+            gifIds=gifIds, ip_address=self.ip_address, user_agent=self.user_agent
+        )
+        print(r.url)
         return self.request(r, **params)
     
     # User/Creator methods
