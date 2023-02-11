@@ -120,9 +120,10 @@ class HTTP:
     # TODO: Implement OAuth login support
     def login(self, ip_address: str, user_agent: str, username: Optional[str] = None, password: Optional[str] = None) -> bool:
         temp_token = self.get_temp_token()['token']
-        self.headers['authorization'] = f'Bearer {temp_token}'
-        self.ip_address = ip_address
-        self.user_agent = user_agent
+        self.headers['authorization'] = f'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL3JlZGdpZnMuY29tL3JvbGVzIjpbXSwiaHR0cHM6Ly9yZWRnaWZzLmNvbS91c2VybmFtZSI6Indvb3QwMjgiLCJpc3MiOiJodHRwczovL3Byb2R1Y3Rpb24tN2h6OTBqMnYudXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDYzZTcxYWVkMWU4Y2VhNDY0MzY4Zjk5MyIsImF1ZCI6Imh0dHBzOi8vYXBpLnJlZGdpZnMuY29tLyIsImlhdCI6MTY3NjA5MDA5NCwiZXhwIjoxNjc2MDkzNjk0LCJhenAiOiJQb29QWDJ6bHNBZHRSQmRWbXZ5dUh5ekwySHo4VDRIZCIsInNjb3BlIjoib2ZmbGluZV9hY2Nlc3MiLCJndHkiOiJwYXNzd29yZCIsInBlcm1pc3Npb25zIjpbXX0.SAWOyGzF8tDjSPrclR_mf6qHREwVtGd_hd-hztDQo8k'
+        self.headers['User-Agent'] = f"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.2 Safari/605.1.15"
+        # self.ip_address = ip_address
+        # self.user_agent = user_agent
         # self.headers['ip-address'] = ip_address
         # self.headers['User-Agent'] = user_agent
         return True
@@ -147,7 +148,7 @@ class HTTP:
     
     def gifs_info(self, gifIds: Union[str, str], **params: Any):
         r = Route(
-            'GET', '/v2/gifs?ids={gifIds}?user-addr={ip_address}&user-agent={user_agent}',
+            'GET', '/v2/gifs/{gifIds}',
             gifIds=gifIds, ip_address=self.ip_address, user_agent=self.user_agent
         )
         print(r.url)
